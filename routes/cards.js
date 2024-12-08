@@ -7,3 +7,5 @@ const router = express.Router()
 router.get('/cards', (req, res)=> {
   res.send(cards)
 })
+
+export default router
