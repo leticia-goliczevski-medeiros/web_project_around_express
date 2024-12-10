@@ -19,12 +19,12 @@ fs.readFile(cardsPath, (error, data)=> {
 
 const router = express.Router()
 
-router.get('/cards', (req, res)=> {
+router.get('/', (req, res)=> {
   if (cards.error) {
     return res.status(404).json(cards)
   }
 
-  return res.json(cards)       
+  return res.json(cards)
 })
 
 export default router
