@@ -28,19 +28,20 @@ userRouter.get('/', (req, res)=> {
 })
 
 userRouter.get('/:id', (req, res)=> {
+
   const { id } = req.params
 
-  const user = users.find( currentUser => currentUser.id === id)
+  const user = users.find( currentUser => currentUser._id === id)
 
   if (users.error) {
-    return res.status(404).json(cards)
+    return res.status(404).json(users)
   }
 
   if (!user) {
     res.status(404).send({ "message": `ID do usuário ${id} não encontrado` })
   }
 
-  return res.json(users.id)
+  return res.json(user)
 })
 
 export default userRouter
