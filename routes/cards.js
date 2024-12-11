@@ -17,9 +17,9 @@ fs.readFile(cardsPath, (error, data)=> {
   cards = JSON.parse(data)
 })
 
-const router = express.Router()
+const cardsRouter = express.Router()
 
-router.get('/', (req, res)=> {
+cardsRouter.get('/', (req, res)=> {
   if (cards.error) {
     return res.status(404).json(cards)
   }
@@ -27,4 +27,4 @@ router.get('/', (req, res)=> {
   return res.json(cards)
 })
 
-export default router
+export default cardsRouter
