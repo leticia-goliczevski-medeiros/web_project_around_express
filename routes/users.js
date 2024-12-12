@@ -36,7 +36,7 @@ userRouter.get('/:id', (req, res) => {
   }
 
   if (!user) {
-    res.status(404).send({ 'message': `ID do usuário ${id} não encontrado` });
+    res.status(404).send({ message: `ID do usuário ${id} não encontrado` });
   }
 
   return res.json(user);
