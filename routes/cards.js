@@ -1,30 +1,30 @@
-import express from 'express'
-import path from 'path';
-import fs from 'fs'
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
 
-const __dirname = import.meta.dirname;
-const cardsPath = path.join(__dirname, '..', 'data', 'cards.json')
+// const __dirname = import.meta.dirname;
+const cardsPath = path.join(__dirname, '..', 'data', 'cards.json');
 
-let cards = []
+let cards = [];
 
-fs.readFile(cardsPath, (error, data)=> {
+fs.readFile(cardsPath, (error, data) => {
   if (error) {
-    console.log(error)
-    cards = {error: 'Não foi possível ler o arquivo'}
-    return
+    console.log(error);
+    cards = { error: 'Não foi possível ler o arquivo' };
+    return;
   }
 
-  cards = JSON.parse(data)
-})
+  cards = JSON.parse(data);
+});
 
-const cardsRouter = express.Router()
+const cardsRouter = express.Router();
 
-cardsRouter.get('/', (req, res)=> {
+cardsRouter.get('/', (req, res) => {
   if (cards.error) {
-    return res.status(404).json(cards)
+    return res.status(404).json(cards);
   }
 
-  return res.json(cards)
-})
+  return res.json(cards);
+});
 
-export default cardsRouter
+module.exports = { cardsRouter };

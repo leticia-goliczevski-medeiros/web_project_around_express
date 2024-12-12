@@ -7,7 +7,7 @@
   ],
   "description": "",
   "main": "app.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",

@@ -1,6 +1,6 @@
-import express from 'express';
-import cardsRouter from './routes/cards.js';
-import userRouter from './routes/users.js';
+const express = require('express');
+const { cardsRouter } = require('./routes/cards');
+const { userRouter } = require('./routes/users');
 
 const app = express();
 const PORT = 3000;
