@@ -4,21 +4,25 @@ const fs = require('fs');
 
 const usersPath = path.join(__dirname, '..', 'data', 'users.json');
 
-let users = [];
+function readUsers() {
+  let users = [];
 
-fs.readFile(usersPath, (error, data) => {
-  if (error) {
-    console.log(error);
-    users = { error: 'Não foi possível ler o arquivo' };
-    return;
-  }
+  fs.readFile(usersPath, (error, data) => {
+    if (error) {
+      console.log(error);
+      users = { error: 'Não foi possível ler o arquivo' };
+      return;
+    }
 
-  users = JSON.parse(data);
-});
+    users = JSON.parse(data);
+  });
+  return users;
+}
 
 const userRouter = express.Router();
 
 userRouter.get('/', (req, res) => {
+  const users = readUsers();
   if (users.error) {
     return res.status(404).json(users);
   }
@@ -27,6 +31,7 @@ userRouter.get('/', (req, res) => {
 });
 
 userRouter.get('/:id', (req, res) => {
+  const users = readUsers();
   const { id } = req.params;
 
   const user = users.find((currentUser) => currentUser._id === id);
