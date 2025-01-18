@@ -21,11 +21,10 @@ function getUser(req, res) {
   })
 }
 
-function creatUser(req, res) {
+function createUser(req, res) {
   const {name, about, avatar} = req.body
 
   User.create({name, about, avatar})
-  .orFail()
   .then(user => res.status(201).send(user))
   .catch((error, {name, about, avatar}) => {
     console.log(`Não foi possível criar o usuário ${{name, about, avatar}}`)
@@ -33,4 +32,4 @@ function creatUser(req, res) {
   })
 }
 
-module.exports = {getUsers, getUser, creatUser}
+module.exports = {getUsers, getUser, createUser}
