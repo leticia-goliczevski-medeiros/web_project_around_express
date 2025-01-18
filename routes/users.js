@@ -1,4 +1,5 @@
 const express = require('express');
+const {getUsers, getUser, createUser} = require('../controllers/users')
 const path = require('path');
 const fs = require('fs');
 
@@ -21,30 +22,10 @@ function readUsers() {
 
 const userRouter = express.Router();
 
-userRouter.get('/', (req, res) => {
-  const users = readUsers();
-  if (users.error) {
-    return res.status(404).json(users);
-  }
+userRouter.get('/', getUsers);
 
-  return res.json(users);
-});
+userRouter.get('/:id', getUser);
 
-userRouter.get('/:id', (req, res) => {
-  const users = readUsers();
-  const { id } = req.params;
-
-  const user = users.find((currentUser) => currentUser._id === id);
-
-  if (users.error) {
-    return res.status(404).json(users);
-  }
-
-  if (!user) {
-    res.status(404).send({ message: `ID do usuário ${id} não encontrado` });
-  }
-
-  return res.json(user);
-});
+userRouter.post('/', createUser)
 
 module.exports = { userRouter };
