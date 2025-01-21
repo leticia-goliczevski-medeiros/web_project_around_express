@@ -12,7 +12,8 @@ function getCards(req, res) {
 }
 
 function createCard(req, res) {
-  const {name, link, userId} = req.body
+  const {name, link} = req.body
+  const userId = req.user._id
 
   Card.create({name, link, owner: userId, likes: [], createdAt: Date.now()})
   .then(card => res.send(card))
