@@ -24,11 +24,19 @@ function getUser(req, res) {
 function createUser(req, res) {
   const {name, about, avatar} = req.body
 
+  const avatarRegex = /https?:\/\/(www\.)?.{1,}/
+  const isAvatarValid = avatar.match(avatarRegex)
+
+  if (!isAvatarValid) {
+    res.status(400).send({message: `Não foi possível criar o usuário ${name}. Link do avatar inválido.`})
+    return
+  }
+
   User.create({name, about, avatar})
   .then(user => res.status(201).send(user))
   .catch((error, {name, about, avatar}) => {
     console.log(`Não foi possível criar o usuário ${{name, about, avatar}}`)
-    res.status(500).send({message: `Não foi possível criar o usuário ${{name, about, avatar}}`})
+    res.status(500).send({message: `Não foi possível criar o usuário ${name}`})
   })
 }
 
