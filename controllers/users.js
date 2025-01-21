@@ -38,10 +38,52 @@ function createUser(req, res) {
 
   User.create({name, about, avatar})
   .then(user => res.status(201).send(user))
-  .catch((error, {name, about, avatar}) => {
-    console.log(`Não foi possível criar o usuário ${{name, about, avatar}}`)
+  .catch((error, name) => {
+    console.log(`Não foi possível criar o usuário ${name}`)
     res.status(SERVER_ERROR).send({message: `Não foi possível criar o usuário ${name}`})
   })
 }
 
-module.exports = {getUsers, getUser, createUser}
+function updateProfileInfo(req, res) {
+  const userId = req.user._id;
+  const {name, about} = req.body;
+
+  User.findByIdAndUpdate(userId, {name, about}, {
+    new: true,
+    runValidators: true,
+    upsert: false
+  })
+  .orFail()
+  .then(user => res.send(user))
+  .catch((error, name) => {
+    console.log(`Não foi possível atualizar o usuário ${name}`)
+    res.status(SERVER_ERROR).send({message: `Não foi possível atualizar o usuário ${name}`})
+  })
+}
+
+function updateProfileAvatar(req, res) {
+  const userId = req.user._id;
+  const {avatar} = req.body;
+
+  const avatarRegex = /https?:\/\/(www\.)?.{1,}/
+  const isAvatarValid = avatar.match(avatarRegex)
+
+  if (!isAvatarValid) {
+    res.status(INVALID_DATA).send({message: `Não foi possível atualizar a foto de usuário. Link do avatar inválido.`})
+    return
+  }
+
+  User.findByIdAndUpdate(userId, {avatar}, {
+    new: true,
+    runValidators: true,
+    upsert: false
+  })
+  .orFail()
+  .then(user => res.send(user))
+  .catch((error) => {
+    console.log(`Não foi possível atualizar a foto de usuário. ${error}`)
+    res.status(SERVER_ERROR).send({message: `Não foi possível atualizar a foto de usuário. ${error}`})
+  })
+}
+
+module.exports = {getUsers, getUser, createUser, updateProfileInfo, updateProfileAvatar}
