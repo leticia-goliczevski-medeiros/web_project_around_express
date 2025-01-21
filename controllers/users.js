@@ -1,12 +1,16 @@
 const User = require('../models/user');
 
+const INVALID_DATA = 400;
+const DOCUMENT_NOT_FOUND = 404;
+const SERVER_ERROR = 500;
+
 function getUsers(req, res) {
   User.find({})
   .orFail()
   .then(user => res.send(user))
   .catch(error => {
     console.log(`Não foi possível encontrar usuários: ${error}`)
-    res.status(404).send({message: `Não foi possível encontrar usuários: ${error}`})})
+    res.status(DOCUMENT_NOT_FOUND).send({message: `Não foi possível encontrar usuários: ${error}`})})
 }
 
 function getUser(req, res) {
@@ -17,7 +21,7 @@ function getUser(req, res) {
   .then(user => res.send(user))
   .catch((error, id) => {
     console.log(`Não foi possível encontrar o usuário com o id ${id}`)
-    res.status(404).send({message: `Não foi possível encontrar o usuário com o id ${id}`})
+    res.status(DOCUMENT_NOT_FOUND).send({message: `Não foi possível encontrar o usuário com o id ${id}`})
   })
 }
 
@@ -28,7 +32,7 @@ function createUser(req, res) {
   const isAvatarValid = avatar.match(avatarRegex)
 
   if (!isAvatarValid) {
-    res.status(400).send({message: `Não foi possível criar o usuário ${name}. Link do avatar inválido.`})
+    res.status(INVALID_DATA).send({message: `Não foi possível criar o usuário ${name}. Link do avatar inválido.`})
     return
   }
 
@@ -36,7 +40,7 @@ function createUser(req, res) {
   .then(user => res.status(201).send(user))
   .catch((error, {name, about, avatar}) => {
     console.log(`Não foi possível criar o usuário ${{name, about, avatar}}`)
-    res.status(500).send({message: `Não foi possível criar o usuário ${name}`})
+    res.status(SERVER_ERROR).send({message: `Não foi possível criar o usuário ${name}`})
   })
 }
 
