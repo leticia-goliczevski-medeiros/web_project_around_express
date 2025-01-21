@@ -15,11 +15,19 @@ function createCard(req, res) {
   const {name, link} = req.body
   const userId = req.user._id
 
+  const linkRegex = /https?:\/\/(www\.)?.{1,}/
+  const isValidLink = link.match(linkRegex)
+
+  if(!isValidLink) {
+    res.status(400).send({message: `Não foi possível criar o card ${name}. Link inválido.`})
+    return
+  }
+
   Card.create({name, link, owner: userId, likes: [], createdAt: Date.now()})
   .then(card => res.send(card))
   .catch(error => {
-    console.log(`Não foi possível criar o card ${{name, link}}`)
-    res.status(404).send({message: `Não foi possível criar o card ${{name, link}}`})
+    console.log(`Não foi possível criar o card ${name}`)
+    res.status(500).send({message: `Não foi possível criar o card ${name}`})
   })
 }
 
