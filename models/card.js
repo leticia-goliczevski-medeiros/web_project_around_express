@@ -12,7 +12,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /https?:\/\/(www\.)?.{1,}/gm.test()
+        return /https?:\/\/(www\.)?.{1,}/gm.test(v)
       },
       message: 'É necessário um link válido.'
     }

@@ -11,7 +11,7 @@ function getCards(req, res) {
   .then(card => res.send(card))
   .catch(error => {
     console.log(`Não foi possível encontrar os cards, ${error}`)
-    res.status(DOCUMENT_NOT_FOUND).send({message: `Não foi possível encontrar os cards, ${error}`})
+    res.status(DOCUMENT_NOT_FOUND).send({message: `Não foi possível encontrar os cards. ${error}`})
   })
 }
 
@@ -31,12 +31,12 @@ function createCard(req, res) {
   .then(card => res.send(card))
   .catch(error => {
     console.log(`Não foi possível criar o card ${name}`)
-    res.status(SERVER_ERROR).send({message: `Não foi possível criar o card ${name}`})
+    res.status(SERVER_ERROR).send({message: `Não foi possível criar o card ${name}. ${error}`})
   })
 }
 
 function deleteCard(req, res) {
-  const {cardId} = req.params;
+  const {id: cardId} = req.params;
 
   Card.findByIdAndDelete(cardId)
   .orFail()
@@ -45,7 +45,30 @@ function deleteCard(req, res) {
     console.log(`Não foi possível deletar o card com o id ${cardId}`)
     res.status(SERVER_ERROR).send({message:`Não foi possível deletar o card com o id ${cardId}`})
   })
-
 }
 
-module.exports = {getCards, createCard, deleteCard}
+function likeCard(req, res) {
+  const {id: cardId } = req.params;
+
+  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+  .orFail()
+  .then(card => res.send(card))
+  .catch(error => {
+    console.log(`Não foi possível adicionar a curtida ao card com o id ${cardId}`)
+    res.status(SERVER_ERROR).send({message:`Não foi possível adicionar a curtida ao card com o id ${cardId}`})
+  })
+}
+
+function dislikeCard(req, res) {
+  const {id: cardId } = req.params;
+
+  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { new: true })
+  .orFail()
+  .then(card => res.send(card))
+  .catch(error => {
+    console.log(`Não foi possível remover a curtida do card com o id ${cardId}`)
+    res.status(SERVER_ERROR).send({message:`Não foi possível remover a curtida do card com o id ${cardId}`})
+  })
+}
+
+module.exports = {getCards, createCard, deleteCard, likeCard, dislikeCard}
