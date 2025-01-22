@@ -19,6 +19,11 @@ function createCard(req, res) {
   const { name, link } = req.body;
   const userId = req.user._id;
 
+  if (!name || !link) {
+    res.status(INVALID_DATA).send({ message: 'Não foi possível criar o card. Dados incompletos.' });
+    return;
+  }
+
   const linkRegex = /https?:\/\/(www\.)?.{1,}/;
   const isValidLink = link.match(linkRegex);
 
