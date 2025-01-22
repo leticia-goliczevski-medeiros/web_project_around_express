@@ -6,84 +6,87 @@ const SERVER_ERROR = 500;
 
 function getUsers(req, res) {
   User.find({})
-  .orFail()
-  .then(user => res.send(user))
-  .catch(error => {
-    console.log(`Não foi possível encontrar usuários: ${error}`)
-    res.status(DOCUMENT_NOT_FOUND).send({message: `Não foi possível encontrar usuários: ${error}`})})
+    .orFail()
+    .then((user) => res.send(user))
+    .catch((error) => {
+      console.log(`Não foi possível encontrar usuários: ${error}`);
+      res.status(DOCUMENT_NOT_FOUND).send({ message: `Não foi possível encontrar usuários: ${error}` });
+    });
 }
 
 function getUser(req, res) {
   const { id } = req.params;
 
   User.findById(id)
-  .orFail()
-  .then(user => res.send(user))
-  .catch((error, id) => {
-    console.log(`Não foi possível encontrar o usuário com o id ${id}`)
-    res.status(DOCUMENT_NOT_FOUND).send({message: `Não foi possível encontrar o usuário com o id ${id}`})
-  })
+    .orFail()
+    .then((user) => res.send(user))
+    .catch(() => {
+      console.log(`Não foi possível encontrar o usuário com o id ${id}`);
+      res.status(DOCUMENT_NOT_FOUND).send({ message: `Não foi possível encontrar o usuário com o id ${id}` });
+    });
 }
 
 function createUser(req, res) {
-  const {name, about, avatar} = req.body
+  const { name, about, avatar } = req.body;
 
-  const avatarRegex = /https?:\/\/(www\.)?.{1,}/
-  const isAvatarValid = avatar.match(avatarRegex)
+  const avatarRegex = /https?:\/\/(www\.)?.{1,}/;
+  const isAvatarValid = avatar.match(avatarRegex);
 
   if (!isAvatarValid) {
-    res.status(INVALID_DATA).send({message: `Não foi possível criar o usuário ${name}. Link do avatar inválido.`})
-    return
+    res.status(INVALID_DATA).send({ message: `Não foi possível criar o usuário ${name}. Link do avatar inválido.` });
+    return;
   }
 
-  User.create({name, about, avatar})
-  .then(user => res.status(201).send(user))
-  .catch((error, name) => {
-    console.log(`Não foi possível criar o usuário ${name}`)
-    res.status(SERVER_ERROR).send({message: `Não foi possível criar o usuário ${name}`})
-  })
+  User.create({ name, about, avatar })
+    .then((user) => res.status(201).send(user))
+    .catch(() => {
+      console.log(`Não foi possível criar o usuário ${name}`);
+      res.status(SERVER_ERROR).send({ message: `Não foi possível criar o usuário ${name}` });
+    });
 }
 
 function updateProfileInfo(req, res) {
   const userId = req.user._id;
-  const {name, about} = req.body;
+  const { name, about } = req.body;
 
-  User.findByIdAndUpdate(userId, {name, about}, {
+  User.findByIdAndUpdate(userId, { name, about }, {
     new: true,
     runValidators: true,
-    upsert: false
+    upsert: false,
   })
-  .orFail()
-  .then(user => res.send(user))
-  .catch((error, name) => {
-    console.log(`Não foi possível atualizar o usuário ${name}`)
-    res.status(SERVER_ERROR).send({message: `Não foi possível atualizar o usuário ${name}`})
-  })
+    .orFail()
+    .then((user) => res.send(user))
+    .catch(() => {
+      console.log(`Não foi possível atualizar o usuário ${name}`);
+      res.status(SERVER_ERROR).send({ message: `Não foi possível atualizar o usuário ${name}` });
+    });
 }
 
 function updateProfileAvatar(req, res) {
   const userId = req.user._id;
-  const {avatar} = req.body;
+  const { avatar } = req.body;
 
-  const avatarRegex = /https?:\/\/(www\.)?.{1,}/
-  const isAvatarValid = avatar.match(avatarRegex)
+  const avatarRegex = /https?:\/\/(www\.)?.{1,}/;
+  const isAvatarValid = avatar.match(avatarRegex);
 
   if (!isAvatarValid) {
-    res.status(INVALID_DATA).send({message: `Não foi possível atualizar a foto de usuário. Link do avatar inválido.`})
-    return
+    res.status(INVALID_DATA).send({ message: 'Não foi possível atualizar a foto de usuário. Link do avatar inválido.' });
+    return;
   }
 
-  User.findByIdAndUpdate(userId, {avatar}, {
+  User.findByIdAndUpdate(userId, { avatar }, {
     new: true,
     runValidators: true,
-    upsert: false
+    upsert: false,
   })
-  .orFail()
-  .then(user => res.send(user))
-  .catch((error) => {
-    console.log(`Não foi possível atualizar a foto de usuário. ${error}`)
-    res.status(SERVER_ERROR).send({message: `Não foi possível atualizar a foto de usuário. ${error}`})
-  })
+    .orFail()
+    .then((user) => res.send(user))
+    .catch((error) => {
+      console.log(`Não foi possível atualizar a foto de usuário. ${error}`);
+      res.status(SERVER_ERROR).send({ message: `Não foi possível atualizar a foto de usuário. ${error}` });
+    });
 }
 
-module.exports = {getUsers, getUser, createUser, updateProfileInfo, updateProfileAvatar}
+module.exports = {
+  getUsers, getUser, createUser, updateProfileInfo, updateProfileAvatar,
+};
