@@ -9,7 +9,6 @@ function getUsers(req, res) {
     .orFail()
     .then((user) => res.send(user))
     .catch((error) => {
-      console.log(`Não foi possível encontrar usuários: ${error}`);
       res.status(DOCUMENT_NOT_FOUND).send({ message: `Não foi possível encontrar usuários: ${error}` });
     });
 }
@@ -21,7 +20,6 @@ function getUser(req, res) {
     .orFail()
     .then((user) => res.send(user))
     .catch(() => {
-      console.log(`Não foi possível encontrar o usuário com o id ${id}`);
       res.status(DOCUMENT_NOT_FOUND).send({ message: `Não foi possível encontrar o usuário com o id ${id}` });
     });
 }
@@ -45,7 +43,6 @@ function createUser(req, res) {
   User.create({ name, about, avatar })
     .then((user) => res.status(201).send(user))
     .catch(() => {
-      console.log(`Não foi possível criar o usuário ${name}`);
       res.status(SERVER_ERROR).send({ message: `Não foi possível criar o usuário ${name}` });
     });
 }
@@ -67,7 +64,6 @@ function updateProfileInfo(req, res) {
     .orFail()
     .then((user) => res.send(user))
     .catch(() => {
-      console.log(`Não foi possível atualizar o usuário ${name}`);
       res.status(SERVER_ERROR).send({ message: `Não foi possível atualizar o usuário ${name}` });
     });
 }
@@ -97,7 +93,6 @@ function updateProfileAvatar(req, res) {
     .orFail()
     .then((user) => res.send(user))
     .catch((error) => {
-      console.log(`Não foi possível atualizar a foto de usuário. ${error}`);
       res.status(SERVER_ERROR).send({ message: `Não foi possível atualizar a foto de usuário. ${error}` });
     });
 }

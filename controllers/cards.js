@@ -10,7 +10,6 @@ function getCards(req, res) {
     .orFail()
     .then((card) => res.send(card))
     .catch((error) => {
-      console.log(`Não foi possível encontrar os cards, ${error}`);
       res.status(DOCUMENT_NOT_FOUND).send({ message: `Não foi possível encontrar os cards. ${error}` });
     });
 }
@@ -37,7 +36,6 @@ function createCard(req, res) {
   })
     .then((card) => res.send(card))
     .catch((error) => {
-      console.log(`Não foi possível criar o card ${name}`);
       res.status(SERVER_ERROR).send({ message: `Não foi possível criar o card ${name}. ${error}` });
     });
 }
@@ -49,7 +47,6 @@ function deleteCard(req, res) {
     .orFail()
     .then((card) => res.send(card))
     .catch(() => {
-      console.log(`Não foi possível deletar o card com o id ${cardId}`);
       res.status(SERVER_ERROR).send({ message: `Não foi possível deletar o card com o id ${cardId}` });
     });
 }
@@ -61,7 +58,6 @@ function likeCard(req, res) {
     .orFail()
     .then((card) => res.send(card))
     .catch(() => {
-      console.log(`Não foi possível adicionar a curtida ao card com o id ${cardId}`);
       res.status(SERVER_ERROR).send({ message: `Não foi possível adicionar a curtida ao card com o id ${cardId}` });
     });
 }
@@ -73,7 +69,6 @@ function dislikeCard(req, res) {
     .orFail()
     .then((card) => res.send(card))
     .catch(() => {
-      console.log(`Não foi possível remover a curtida do card com o id ${cardId}`);
       res.status(SERVER_ERROR).send({ message: `Não foi possível remover a curtida do card com o id ${cardId}` });
     });
 }
